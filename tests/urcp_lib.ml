@@ -58,29 +58,35 @@ let queue_read uring t len =
 let eagain = -11
 let eintr = -4
 
+open Stdlib_upstream_compatible
+
+
 (* Check that a read has completely finished, and if not
  * queue it up for completing the remaining amount *)
 let handle_read_completion uring req res =
-  Logs.debug (fun l -> l "read_completion: res=%d %a" res pp_req req);
+  (* Logs.debug (fun l -> l "read_completion: res=%d %a" res pp_req req); *)
+  let ( = ) = Int32_u.equal in
+  let ( < ) a b = Int.compare (Int32_u.to_int a) b < 0 in
   let bytes_to_read = req.len - req.off in
   match res with
-  | 0 ->
+  | #0l ->
     Logs.debug (fun l -> l "eof %a" pp_req req);
-  | n when n = eagain || n = eintr ->
+  | n when n = -#11l || n = -#4l ->
     (* requeue the request *)
     let r = Uring.readv ~file_offset:req.fileoff uring req.t.infd req.iov.next req in
     assert(r <> None);
     Logs.debug (fun l -> l "requeued eintr read: %a" pp_req req);
   | n when n < 0 ->
-    raise (Failure ("unix errorno " ^ (string_of_int n)))
+    raise (Failure ("unix errorno " ^ (Int32_u.to_string n)))
   | n when n < bytes_to_read ->
     (* handle short read so new iovec and resubmit *)
+    let n = Int32_u.to_int n in
     req.iov.next <- Cstruct.shiftv req.iov.next n;
     req.off <- req.off + n;
     let r = Uring.readv ~file_offset:(Int63.of_int req.off) uring req.t.infd req.iov.next req in
     assert(r <> None);
     Logs.debug (fun l -> l "requeued short read: %a" pp_req req);
-  | n when n = bytes_to_read ->
+  | n when Int.equal (Int32_u.to_int n) bytes_to_read ->
     (* Read is complete, all bytes are read, turn it into a write *)
     req.t.reads <- req.t.reads - 1;
     req.t.writes <- req.t.writes + 1;
@@ -90,30 +96,33 @@ let handle_read_completion uring req res =
     let r = Uring.writev uring ~file_offset:req.fileoff req.t.outfd req.iov.next req in
     assert(r <> None);
     Logs.debug (fun l -> l "queued write: %a" pp_req req);
-  | n -> raise (Failure (Printf.sprintf "unexpected readv result %d > %d " bytes_to_read n))
+  | n -> raise (Failure (Printf.sprintf "unexpected urcp readv result %d < %d " bytes_to_read (Int32_u.to_int n)))
 
 let handle_write_completion uring req res =
-  Logs.debug (fun l -> l "write_completion: res=%d %a" res pp_req req);
+  let ( = ) = Int32_u.equal in
+  let ( < ) a b = Int.compare (Int32_u.to_int a) b < 0 in
+  (* Logs.debug (fun l -> l "write_completion: res=%d %a" res pp_req req); *)
   let bytes_to_write = req.len - req.off in
   match res with
-  | 0 -> raise End_of_file
-  | n when n = eagain || n = eintr ->
+  | #0l -> raise End_of_file
+  | n when n = -#11l || n = -#4l ->
     (* requeue the request *)
     let r = Uring.writev ~file_offset:req.fileoff uring req.t.infd req.iov.next req in
     assert(r <> None);
     Logs.debug (fun l -> l "requeued eintr read: %a" pp_req req);
   | n when n < bytes_to_write ->
     (* handle short write so new iovec and resubmit *)
+    let n = Int32_u.to_int n in
     req.iov.next <- Cstruct.shiftv req.iov.next n;
     req.off <- req.off + n;
     let r = Uring.writev ~file_offset:req.fileoff uring req.t.infd req.iov.next req in
     assert(r <> None);
     Logs.debug (fun l -> l "requeued write read: %a" pp_req req);
-  | n when n = bytes_to_write ->
+  | n when n = (Int32_u.of_int bytes_to_write) ->
     req.t.writes <- req.t.writes - 1;
     req.t.write_left <- req.t.write_left - req.len;
     Logs.debug (fun l -> l "write done: %a" pp_req req)
-  | n -> raise (Failure (Printf.sprintf "unexpected writev result %d > %d " bytes_to_write n))
+  | n -> raise (Failure (Printf.sprintf "unexpected writev result %d > %d " bytes_to_write (Int32_u.to_int n)))
 
 let handle_completion uring req res =
   match req.op with

@@ -1,7 +1,7 @@
 (* cp(1) built with liburing. Queues up as many reads as the queue
  * depth allows and then queues up corresponding writes.
    OCaml version of https://unixism.net/loti/tutorial/cp_liburing.html *)
-
+open Stdlib_upstream_compatible
 module Int63 = Optint.Int63
 
 let get_file_size fd =
@@ -49,33 +49,31 @@ let queue_read uring t len =
   t.read_left <- t.read_left - len;
   t.reads <- t.reads + 1
 
-(* TODO compile time check *)
-let eagain = -11
-let eintr = -4
-
 (* Check that a read has completely finished, and if not
  * queue it up for completing the remaining amount *)
 let handle_read_completion uring req res =
-  Logs.debug (fun l -> l "read_completion: res=%d %a" res pp_req req);
+  let ( < ) a b = Int32_u.compare a b < 0 in 
+  (* Logs.debug (fun l -> l "read_completion: res=%d %a" res pp_req req); *)
   let bytes_to_read = req.len - req.off in
   match res with
-  | 0 ->
+  | #0l ->
     Logs.debug (fun l -> l "eof %a" pp_req req);
-  | n when n = eagain || n = eintr ->
+  | n when Int32_u.equal n (-#11l) || Int32_u.equal n (-#4l) ->
     (* requeue the request *)
     let r = Uring.read_fixed ~file_offset:req.fileoff uring req.t.infd ~off:req.fixed_off ~len:req.len req in
     assert(r <> None);
     Logs.debug (fun l -> l "requeued eintr read: %a" pp_req req);
-  | n when n < 0 ->
-    raise (Failure ("unix errorno " ^ (string_of_int n)))
-  | n when n < bytes_to_read ->
+  | n when n < #0l ->
+    raise (Failure ("unix errorno " ^ (Int32_u.to_string n)))
+  | n when n < Int32_u.of_int bytes_to_read ->
     (* handle short read *)
+    let n = Int32_u.to_int n in
     req.off <- req.off + n;
     req.len <- req.len - n;
     let r = Uring.read_fixed ~file_offset:req.fileoff uring req.t.infd ~off:(req.fixed_off+req.off) ~len:req.len req in
     assert(r <> None);
     Logs.debug (fun l -> l "requeued short read: %a" pp_req req);
-  | n when n = bytes_to_read ->
+  | n when Int32_u.equal n (Int32_u.of_int bytes_to_read) ->
     (* Read is complete, all bytes are read, turn it into a write *)
     req.t.reads <- req.t.reads - 1;
     req.t.writes <- req.t.writes + 1;
@@ -83,32 +81,35 @@ let handle_read_completion uring req res =
     let r = Uring.write_fixed uring ~file_offset:req.fileoff req.t.outfd ~off:req.fixed_off ~len:req.len req in
     assert(r <> None);
     Logs.debug (fun l -> l "queued write: %a" pp_req req);
-  | n -> raise (Failure (Printf.sprintf "unexpected read result %d > %d " bytes_to_read n))
+  | n -> raise (Failure (Printf.sprintf "unexpected read result %d > %d " bytes_to_read (Int32_u.to_int n)))
 
 let handle_write_completion uring req res =
-  Logs.debug (fun l -> l "write_completion: res=%d %a" res pp_req req);
+  let ( < ) a b = Int32_u.compare a b < 0 in 
+  (* Logs.debug (fun l -> l "write_completion: res=%d %a" res pp_req req); *)
   let bytes_to_write = req.len - req.off in
   match res with
-  | 0 -> raise End_of_file
-  | n when n = eagain || n = eintr ->
+  | #0l -> raise End_of_file
+  | n when Int32_u.equal n (-#11l) || Int32_u.equal n (-#4l) ->
     (* requeue the request *)
     let r = Uring.write_fixed ~file_offset:req.fileoff uring req.t.outfd ~off:req.fixed_off ~len:req.len req in
     assert(r <> None);
     Logs.debug (fun l -> l "requeued eintr read: %a" pp_req req);
-  | n when n < 0 -> failwith (Fmt.str "unix error %d" (-n))
-  | n when n < bytes_to_write ->
+  | n when n < #0l ->
+    raise (Failure ("unix errorno " ^ (Int32_u.to_string n)))
+  | n when n < Int32_u.of_int bytes_to_write ->
     (* handle short write  *)
+    let n = Int32_u.to_int n in
     req.off <- req.off + n;
     req.len <- req.len - n;
     let r = Uring.write_fixed ~file_offset:req.fileoff uring req.t.outfd ~off:(req.fixed_off+req.off) ~len:req.len req in
     assert(r <> None);
     Logs.debug (fun l -> l "requeued short write: %a" pp_req req);
-  | n when n = bytes_to_write ->
+  | n when Int32_u.equal n (Int32_u.of_int bytes_to_write) ->
     req.t.writes <- req.t.writes - 1;
     req.t.write_left <- req.t.write_left - req.len;
     Queue.push req.fixed_off req.t.freelist;
     Logs.debug (fun l -> l "write done: %a" pp_req req);
-  | n -> raise (Failure (Printf.sprintf "unexpected writev result %d > %d " bytes_to_write n))
+  | n -> raise (Failure (Printf.sprintf "unexpected writev result %d > %d " bytes_to_write (Int32_u.to_int n)))
 
 let handle_completion uring req res =
   match req.op with

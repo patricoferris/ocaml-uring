@@ -637,7 +637,7 @@ val submit : 'a t -> int
 
 type 'a completion_option =
   | None
-  | Some of { result: int; data: 'a } (**)
+  | Some of { result: int32#; data: 'a } (**)
 (** The type of results of calling {!wait} and {!peek}. [None] denotes that
     either there were no completions in the queue or an interrupt / timeout
     occurred. [Some] contains both the user data attached to the completed

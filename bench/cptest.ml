@@ -19,7 +19,7 @@ let fill_file_with_random ~count dst =
 
 let block_size = 32 * 1024
 let queue_depth = 64
-let count = 50000
+let count = 10000
 
 let run_cp_test impl ~block_size ~queue_depth count =
   let fname_in = Fmt.str "cptest-%d.in" count in
@@ -39,7 +39,7 @@ let run_test impl ~block_size ~queue_depth count =
   run_cp_test impl ~block_size ~queue_depth count
 
 let test_size impl =
-  Test.make_indexed ~name:"size" ~fmt:"%s %d" ~args:[ 1000; 10000; 50000 ]
+  Test.make_indexed ~name:"size" ~fmt:"%s %d" ~args:[ 1000; 5000 ]
     (run_test impl ~block_size ~queue_depth)
 
 let test_queue_depth impl =

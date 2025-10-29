@@ -13,6 +13,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
+open Stdlib_upstream_compatible
 
 module Private = struct
   module Heap = Heap
@@ -112,7 +113,7 @@ module Statx = struct
        |`Symbolic_link -> "symbolic link"
        |`Socket -> "socket")
 
-  external create : unit -> t = "ocaml_uring_make_statx"
+  external create : unit -> t = "" "ocaml_uring_make_statx"
 
   module Flags = struct
     include Flags
@@ -138,43 +139,43 @@ module Statx = struct
       Int64.equal (Int64.logand mask i) i 
   end
 
-  external blksize : t -> (int64 [@unboxed]) = "ocaml_uring_statx_blksize_bytes" "ocaml_uring_statx_blksize_native" [@@noalloc]
-  external attributes : t -> (int64 [@unboxed]) = "ocaml_uring_statx_attributes_bytes" "ocaml_uring_statx_attributes_native" [@@noalloc]
-  external nlink : t -> (int64 [@unboxed]) = "ocaml_uring_statx_nlink_bytes" "ocaml_uring_statx_nlink_native" [@@noalloc]
-  external uid : t -> (int64 [@unboxed]) = "ocaml_uring_statx_uid_bytes" "ocaml_uring_statx_uid_native" [@@noalloc]
-  external gid : t -> (int64 [@unboxed]) = "ocaml_uring_statx_gid_bytes" "ocaml_uring_statx_gid_native" [@@noalloc]
-  external ino : t -> (int64 [@unboxed]) = "ocaml_uring_statx_ino_bytes" "ocaml_uring_statx_ino_native" [@@noalloc]
-  external size : t -> (int64 [@unboxed]) = "ocaml_uring_statx_size_bytes" "ocaml_uring_statx_size_native" [@@noalloc]
-  external blocks : t -> (int64 [@unboxed]) = "ocaml_uring_statx_blocks_bytes" "ocaml_uring_statx_blocks_native" [@@noalloc]
-  external attributes_mask : t -> (int64 [@unboxed]) = "ocaml_uring_statx_attributes_mask_bytes" "ocaml_uring_statx_attributes_mask_native" [@@noalloc]
-  external rdev : t -> (int64 [@unboxed]) = "ocaml_uring_statx_rdev_bytes" "ocaml_uring_statx_rdev_native" [@@noalloc]
-  external dev : t -> (int64 [@unboxed]) = "ocaml_uring_statx_dev_bytes" "ocaml_uring_statx_dev_native" [@@noalloc]
-  external mask : t -> (int64 [@unboxed]) = "ocaml_uring_statx_mask_bytes" "ocaml_uring_statx_mask_native" [@@noalloc]
-  external mnt_id : t -> (int64 [@unboxed]) = "ocaml_uring_statx_mnt_id_bytes" "ocaml_uring_statx_mnt_id_native" [@@noalloc]
-  external dio_mem_align : t -> (int64 [@unboxed]) = "ocaml_uring_statx_dio_mem_align_bytes" "ocaml_uring_statx_dio_mem_align_native" [@@noalloc]
-  external dio_offset_align : t -> (int64 [@unboxed]) = "ocaml_uring_statx_dio_offset_align_bytes" "ocaml_uring_statx_dio_offset_align_native" [@@noalloc]
+  external blksize : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_blksize_bytes" "ocaml_uring_statx_blksize_native" [@@noalloc]
+  external attributes : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_attributes_bytes" "ocaml_uring_statx_attributes_native" [@@noalloc]
+  external nlink : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_nlink_bytes" "ocaml_uring_statx_nlink_native" [@@noalloc]
+  external uid : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_uid_bytes" "ocaml_uring_statx_uid_native" [@@noalloc]
+  external gid : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_gid_bytes" "ocaml_uring_statx_gid_native" [@@noalloc]
+  external ino : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_ino_bytes" "ocaml_uring_statx_ino_native" [@@noalloc]
+  external size : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_size_bytes" "ocaml_uring_statx_size_native" [@@noalloc]
+  external blocks : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_blocks_bytes" "ocaml_uring_statx_blocks_native" [@@noalloc]
+  external attributes_mask : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_attributes_mask_bytes" "ocaml_uring_statx_attributes_mask_native" [@@noalloc]
+  external rdev : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_rdev_bytes" "ocaml_uring_statx_rdev_native" [@@noalloc]
+  external dev : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_dev_bytes" "ocaml_uring_statx_dev_native" [@@noalloc]
+  external mask : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_mask_bytes" "ocaml_uring_statx_mask_native" [@@noalloc]
+  external mnt_id : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_mnt_id_bytes" "ocaml_uring_statx_mnt_id_native" [@@noalloc]
+  external dio_mem_align : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_dio_mem_align_bytes" "ocaml_uring_statx_dio_mem_align_native" [@@noalloc]
+  external dio_offset_align : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_dio_offset_align_bytes" "ocaml_uring_statx_dio_offset_align_native" [@@noalloc]
 
-  external atime_sec : t -> (int64 [@unboxed]) = "ocaml_uring_statx_atime_sec_bytes" "ocaml_uring_statx_atime_sec_native" [@@noalloc]
-  external btime_sec : t -> (int64 [@unboxed]) = "ocaml_uring_statx_btime_sec_bytes" "ocaml_uring_statx_btime_sec_native" [@@noalloc]
-  external ctime_sec : t -> (int64 [@unboxed]) = "ocaml_uring_statx_ctime_sec_bytes" "ocaml_uring_statx_ctime_sec_native" [@@noalloc]
-  external mtime_sec : t -> (int64 [@unboxed]) = "ocaml_uring_statx_mtime_sec_bytes" "ocaml_uring_statx_mtime_sec_native" [@@noalloc]
+  external atime_sec : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_atime_sec_bytes" "ocaml_uring_statx_atime_sec_native" [@@noalloc]
+  external btime_sec : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_btime_sec_bytes" "ocaml_uring_statx_btime_sec_native" [@@noalloc]
+  external ctime_sec : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_ctime_sec_bytes" "ocaml_uring_statx_ctime_sec_native" [@@noalloc]
+  external mtime_sec : t -> (int64 [@unboxed]) = "" "ocaml_uring_statx_mtime_sec_bytes" "ocaml_uring_statx_mtime_sec_native" [@@noalloc]
 
-  external atime_nsec : t -> int = "ocaml_uring_statx_atime_nsec" [@@noalloc]
-  external btime_nsec : t -> int = "ocaml_uring_statx_btime_nsec" [@@noalloc]
-  external ctime_nsec : t -> int = "ocaml_uring_statx_ctime_nsec" [@@noalloc]
-  external mtime_nsec : t -> int = "ocaml_uring_statx_mtime_nsec" [@@noalloc]
+  external atime_nsec : t -> int = "" "ocaml_uring_statx_atime_nsec" [@@noalloc]
+  external btime_nsec : t -> int = "" "ocaml_uring_statx_btime_nsec" [@@noalloc]
+  external ctime_nsec : t -> int = "" "ocaml_uring_statx_ctime_nsec" [@@noalloc]
+  external mtime_nsec : t -> int = "" "ocaml_uring_statx_mtime_nsec" [@@noalloc]
 
-  external mode : t -> (int [@untagged]) = "ocaml_uring_statx_mode_bytes" "ocaml_uring_statx_mode_native" [@@noalloc]
-  external perm : t -> (int [@untagged]) = "ocaml_uring_statx_perm_bytes" "ocaml_uring_statx_perm_native" [@@noalloc]
+  external mode : t -> (int [@untagged]) = "" "ocaml_uring_statx_mode_bytes" "ocaml_uring_statx_mode_native" [@@noalloc]
+  external perm : t -> (int [@untagged]) = "" "ocaml_uring_statx_perm_bytes" "ocaml_uring_statx_perm_native" [@@noalloc]
 
-  external kind : t -> kind = "ocaml_uring_statx_kind"
+  external kind : t -> kind = "" "ocaml_uring_statx_kind"
 end
 
 module Sockaddr = struct
   type t
 
-  external of_unix : Unix.sockaddr -> t = "ocaml_uring_make_sockaddr"
-  external get : t -> Unix.sockaddr = "ocaml_uring_extract_sockaddr"
+  external of_unix : Unix.sockaddr -> t = "" "ocaml_uring_make_sockaddr"
+  external get : t -> Unix.sockaddr = "" "ocaml_uring_extract_sockaddr"
 
   let dummy_addr = Unix.ADDR_UNIX "-"
 
@@ -184,7 +185,7 @@ end
 module Open_how = struct
   type t
 
-  external make : int -> Unix.file_perm -> int -> string -> t = "ocaml_uring_make_open_how"
+  external make : int -> Unix.file_perm -> int -> string -> t = "" "ocaml_uring_make_open_how"
 
   let v ~open_flags ~perm ~resolve path = make open_flags perm resolve path
 end
@@ -252,7 +253,7 @@ module Sketch = struct
     t.old_buffers <- []
 
   module Iovec = struct
-    external set : ptr -> Cstruct.t list -> unit = "ocaml_uring_set_iovec" [@@noalloc]
+    external set : ptr -> Cstruct.t list -> unit = "" "ocaml_uring_set_iovec" [@@noalloc]
 
     let sizeof = Config.sizeof_iovec
 
@@ -263,7 +264,7 @@ module Sketch = struct
   end
 
   module String = struct
-    external set : ptr -> string -> unit = "ocaml_uring_set_string" [@@noalloc]
+    external set : ptr -> string -> unit = "" "ocaml_uring_set_string" [@@noalloc]
 
     let alloc t s =
       let ptr = alloc t (String.length s + 1) in
@@ -276,8 +277,8 @@ end
 module Msghdr = struct
   type msghdr
   type t = msghdr * Sockaddr.t option * Cstruct.t list (* `Cstruct.t list` is here only for preventing it being GCed *)
-  external make_msghdr : int -> Unix.file_descr list -> Sockaddr.t option -> msghdr = "ocaml_uring_make_msghdr"
-  external get_msghdr_fds : msghdr -> Unix.file_descr list = "ocaml_uring_get_msghdr_fds"
+  external make_msghdr : int -> Unix.file_descr list -> Sockaddr.t option -> msghdr = "" "ocaml_uring_make_msghdr"
+  external get_msghdr_fds : msghdr -> Unix.file_descr list = "" "ocaml_uring_get_msghdr_fds"
 
   let get_fds (hdr, _, _) = get_msghdr_fds hdr
 
@@ -299,54 +300,56 @@ type probe
 module Uring = struct
   type t
 
-  external create : int -> int option -> t = "ocaml_uring_setup"
-  external exit : t -> unit = "ocaml_uring_exit"
+  external create : int -> int option -> t = "" "ocaml_uring_setup"
+  external exit : t -> unit = "" "ocaml_uring_exit"
 
-  external unregister_buffers : t -> unit = "ocaml_uring_unregister_buffers"
-  external register_bigarray : t ->  Cstruct.buffer -> unit = "ocaml_uring_register_ba"
-  external submit : t -> int = "ocaml_uring_submit"
-  external sq_ready : t -> int = "ocaml_uring_sq_ready" [@@noalloc]
+  external unregister_buffers : t -> unit = "" "ocaml_uring_unregister_buffers"
+  external register_bigarray : t ->  Cstruct.buffer -> unit = "" "ocaml_uring_register_ba"
+  external submit : t -> int = "" "ocaml_uring_submit"
+  external sq_ready : t -> int = "" "ocaml_uring_sq_ready" [@@noalloc]
 
-  external get_probe_ring : t -> probe = "ocaml_uring_get_probe_ring"
-  external opcode_supported : probe -> Op.t -> bool = "ocaml_uring_opcode_supported" [@@noalloc]
+  external get_probe_ring : t -> probe = "" "ocaml_uring_get_probe_ring"
+  external opcode_supported : probe -> Op.t -> bool = "" "ocaml_uring_opcode_supported" [@@noalloc]
 
   type id = Heap.ptr
 
   type offset = Optint.Int63.t
-  external submit_nop : t -> id -> bool = "ocaml_uring_submit_nop" [@@noalloc]
-  external submit_timeout : t -> id -> Sketch.ptr -> clock -> bool -> bool = "ocaml_uring_submit_timeout" [@@noalloc]
-  external submit_poll_add : t -> Unix.file_descr -> id -> Poll_mask.t -> bool = "ocaml_uring_submit_poll_add" [@@noalloc]
-  external submit_read : t -> Unix.file_descr -> id -> Cstruct.t -> offset -> bool = "ocaml_uring_submit_read" [@@noalloc]
-  external submit_write : t -> Unix.file_descr -> id -> Cstruct.t -> offset -> bool = "ocaml_uring_submit_write" [@@noalloc]
-  external submit_readv : t -> Unix.file_descr -> id -> Sketch.ptr -> offset -> bool = "ocaml_uring_submit_readv" [@@noalloc]
-  external submit_writev : t -> Unix.file_descr -> id -> Sketch.ptr -> offset -> bool = "ocaml_uring_submit_writev" [@@noalloc]
-  external submit_readv_fixed : t -> Unix.file_descr -> id -> Cstruct.buffer -> int -> int -> offset -> bool = "ocaml_uring_submit_readv_fixed_byte" "ocaml_uring_submit_readv_fixed_native" [@@noalloc]
-  external submit_writev_fixed : t -> Unix.file_descr -> id -> Cstruct.buffer -> int -> int -> offset -> bool = "ocaml_uring_submit_writev_fixed_byte" "ocaml_uring_submit_writev_fixed_native" [@@noalloc]
-  external submit_close : t -> Unix.file_descr -> id -> bool = "ocaml_uring_submit_close" [@@noalloc]
-  external submit_statx : t -> id -> Unix.file_descr -> Statx.t -> Sketch.ptr -> int -> int -> bool = "ocaml_uring_submit_statx_byte" "ocaml_uring_submit_statx_native" [@@noalloc]
-  external submit_splice : t -> id -> Unix.file_descr -> Unix.file_descr -> int -> bool = "ocaml_uring_submit_splice" [@@noalloc]
-  external submit_connect : t -> id -> Unix.file_descr -> Sockaddr.t -> bool = "ocaml_uring_submit_connect" [@@noalloc]
-  external submit_accept : t -> id -> Unix.file_descr -> Sockaddr.t -> bool = "ocaml_uring_submit_accept" [@@noalloc]
-  external submit_cancel : t -> id -> id -> bool = "ocaml_uring_submit_cancel" [@@noalloc]
-  external submit_openat2 : t -> id -> Unix.file_descr -> Open_how.t -> bool = "ocaml_uring_submit_openat2" [@@noalloc]
-  external submit_linkat : t -> id -> Unix.file_descr -> Sketch.ptr -> Unix.file_descr -> Sketch.ptr -> int -> bool = "ocaml_uring_submit_linkat_byte" "ocaml_uring_submit_linkat_native" [@@noalloc]
-  external submit_unlinkat : t -> id -> Unix.file_descr -> Sketch.ptr -> bool -> bool = "ocaml_uring_submit_unlinkat" [@@noalloc]
-  external submit_send_msg : t -> id -> Unix.file_descr -> Msghdr.t -> Sketch.ptr -> bool = "ocaml_uring_submit_send_msg" [@@noalloc]
-  external submit_recv_msg : t -> id -> Unix.file_descr -> Msghdr.t -> Sketch.ptr -> bool = "ocaml_uring_submit_recv_msg" [@@noalloc]
-  external submit_fsync : t -> id -> Unix.file_descr -> int64 -> int -> bool = "ocaml_uring_submit_fsync" [@@noalloc]
-  external submit_fdatasync : t -> id -> Unix.file_descr -> int64 -> int -> bool = "ocaml_uring_submit_fdatasync" [@@noalloc]
+  external submit_nop : t -> id -> bool = "" "ocaml_uring_submit_nop" [@@noalloc]
+  external submit_timeout : t -> id -> Sketch.ptr -> clock -> bool -> bool = "" "ocaml_uring_submit_timeout" [@@noalloc]
+  external submit_poll_add : t -> Unix.file_descr -> id -> Poll_mask.t -> bool = "" "ocaml_uring_submit_poll_add" [@@noalloc]
+  external submit_read : t -> Unix.file_descr -> id -> Cstruct.t -> offset -> bool = "" "ocaml_uring_submit_read" [@@noalloc]
+  external submit_write : t -> Unix.file_descr -> id -> Cstruct.t -> offset -> bool = "" "ocaml_uring_submit_write" [@@noalloc]
+  external submit_readv : t -> Unix.file_descr -> id -> Sketch.ptr -> offset -> bool = "" "ocaml_uring_submit_readv" [@@noalloc]
+  external submit_writev : t -> Unix.file_descr -> id -> Sketch.ptr -> offset -> bool = "" "ocaml_uring_submit_writev" [@@noalloc]
+  external submit_readv_fixed : t -> Unix.file_descr -> id -> Cstruct.buffer -> int -> int -> offset -> bool = "" "ocaml_uring_submit_readv_fixed_byte" "ocaml_uring_submit_readv_fixed_native" [@@noalloc]
+  external submit_writev_fixed : t -> Unix.file_descr -> id -> Cstruct.buffer -> int -> int -> offset -> bool = "" "ocaml_uring_submit_writev_fixed_byte" "ocaml_uring_submit_writev_fixed_native" [@@noalloc]
+  external submit_close : t -> Unix.file_descr -> id -> bool = "" "ocaml_uring_submit_close" [@@noalloc]
+  external submit_statx : t -> id -> Unix.file_descr -> Statx.t -> Sketch.ptr -> int -> int -> bool = "" "ocaml_uring_submit_statx_byte" "ocaml_uring_submit_statx_native" [@@noalloc]
+  external submit_splice : t -> id -> Unix.file_descr -> Unix.file_descr -> int -> bool = "" "ocaml_uring_submit_splice" [@@noalloc]
+  external submit_connect : t -> id -> Unix.file_descr -> Sockaddr.t -> bool = "" "ocaml_uring_submit_connect" [@@noalloc]
+  external submit_accept : t -> id -> Unix.file_descr -> Sockaddr.t -> bool = "" "ocaml_uring_submit_accept" [@@noalloc]
+  external submit_cancel : t -> id -> id -> bool = "" "ocaml_uring_submit_cancel" [@@noalloc]
+  external submit_openat2 : t -> id -> Unix.file_descr -> Open_how.t -> bool = "" "ocaml_uring_submit_openat2" [@@noalloc]
+  external submit_linkat : t -> id -> Unix.file_descr -> Sketch.ptr -> Unix.file_descr -> Sketch.ptr -> int -> bool = "" "ocaml_uring_submit_linkat_byte" "ocaml_uring_submit_linkat_native" [@@noalloc]
+  external submit_unlinkat : t -> id -> Unix.file_descr -> Sketch.ptr -> bool -> bool = "" "ocaml_uring_submit_unlinkat" [@@noalloc]
+  external submit_send_msg : t -> id -> Unix.file_descr -> Msghdr.t -> Sketch.ptr -> bool = "" "ocaml_uring_submit_send_msg" [@@noalloc]
+  external submit_recv_msg : t -> id -> Unix.file_descr -> Msghdr.t -> Sketch.ptr -> bool = "" "ocaml_uring_submit_recv_msg" [@@noalloc]
+  external submit_fsync : t -> id -> Unix.file_descr -> int64 -> int -> bool = "" "ocaml_uring_submit_fsync" [@@noalloc]
+  external submit_fdatasync : t -> id -> Unix.file_descr -> int64 -> int -> bool = "" "ocaml_uring_submit_fdatasync" [@@noalloc]
 
-  type cqe_option = private
-    | Cqe_none
-    | Cqe_some of { user_data_id : id; res: int }
-  [@@ocaml.warning "-37" (* Avoids "Unused constructor" warning on OCaml <= 4.09. *)]
+  type cqe = {
+    user_data_id : Heap.ptr;
+    res : int32#;
+  }
 
-  external wait_cqe : t -> cqe_option = "ocaml_uring_wait_cqe"
-  external wait_cqe_timeout : float -> t -> cqe_option = "ocaml_uring_wait_cqe_timeout"
-  external peek_cqe : t -> cqe_option = "ocaml_uring_peek_cqe"
+  let is_cqe_none d = Heap.is_empty d.user_data_id 
 
-  external error_of_errno : int -> Unix.error = "ocaml_uring_error_of_errno"
-  external register_eventfd : t -> Unix.file_descr -> unit = "ocaml_uring_register_eventfd"
+  external wait_cqe : t -> cqe = "" "ocaml_uring_wait_cqe"
+  external wait_cqe_timeout : float -> t -> cqe = "" "ocaml_uring_wait_cqe_timeout"
+  external peek_cqe : t -> cqe = "" "ocaml_uring_peek_cqe"
+
+  external error_of_errno : int -> Unix.error = "" "ocaml_uring_error_of_errno"
+  external register_eventfd : t -> Unix.file_descr -> unit = "" "ocaml_uring_register_eventfd"
 end
 
 type 'a t = {
@@ -450,7 +453,7 @@ let with_id t fn a = with_id_full t fn a ~extra_data:()
 let noop t user_data =
   with_id t (fun id -> Uring.submit_nop t.uring id) user_data
 
-external set_timespec: Sketch.ptr -> int64 -> unit = "ocaml_uring_set_timespec" [@@noalloc]
+external set_timespec: Sketch.ptr -> int64 -> unit = "" "ocaml_uring_set_timespec" [@@noalloc]
 
 let timeout ?(absolute = false) t clock timeout_ns user_data =
   let timespec_ptr = Sketch.alloc t.sketch Config.sizeof_kernel_timespec in
@@ -564,7 +567,7 @@ let fdatasync t ?(off=0L) ?(len=0) fd user_data =
   with_id t (fun id -> Uring.submit_fdatasync t.uring id fd off len) user_data
 
 let cancel t job user_data =
-  ignore (Heap.ptr job : Uring.id);  (* Check it's still valid *)
+  let _ = Heap.ptr job in  (* Check it's still valid *)
   with_id t (fun id -> Uring.submit_cancel t.uring id (Heap.ptr job)) user_data
 
 let sqe_ready t = Uring.sq_ready t.uring
@@ -592,12 +595,12 @@ let submit t =
 
 type 'a completion_option =
   | None
-  | Some of { result: int; data: 'a }
+  | Some of { result: int32#; data: 'a }
 
 let fn_on_ring fn t =
   match fn t.uring with
-  | Uring.Cqe_none -> None
-  | Uring.Cqe_some { user_data_id; res } ->
+  | c when Uring.is_cqe_none c -> None
+  | Uring.{ user_data_id; res } ->
     let data = Heap.free t.data user_data_id in
     Some { result = res; data }
 

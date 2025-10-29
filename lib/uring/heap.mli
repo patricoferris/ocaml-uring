@@ -23,8 +23,10 @@ val create : int -> _ t
 type 'a entry
 (** An element in a heap. *)
 
-type ptr = private int
+type ptr = private int32#
 (** The index of an entry. *)
+
+val is_empty : ptr -> bool
 
 val ptr : 'a entry -> ptr
 (** [ptr e] is the index of [e].
